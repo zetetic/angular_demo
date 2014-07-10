@@ -1,0 +1,26 @@
+== README
+
+Simple demo app using Rails and AngularJS
+
+# Description
+
+Retrieves stock quotes from Yahoo Finance via YQL. These are updated whenever the client request a refresh. The client
+hits the path /quotes on the local server, which goes out to Yahoo for the most recent quotes for the selected symbols.
+
+The page starts out with an invitation to add a symbol. The user clicks 'Add Symbol' to open a typeahead control, driven
+by a static list of sample symbols. As symbols are added to the selection, the client repeats the API call to update
+the quotes.
+
+The selected symbols are stored in the local DB and retrieved when the page is refreshed. We cheat a bit and store the list
+of symbols in a serialized column in a single row. Changes to the selection are persisted. Reloading the page initializes
+the selection from the persisted list.
+
+A timer on the client starts counting down when the selection changes. When the timer runs out the quotes are retrieved again, 
+and the timer is reset.
+
+
+# Setup
+1. git clone
+2. bundle
+3. rake db:migrate
+4. rails s

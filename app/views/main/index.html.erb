@@ -1,0 +1,75 @@
+<div class="container" ng-controller="QuotesCtrl">
+  <div class="row">
+    <div class="col-md-6">
+      <br />
+      <div class="alert alert-info" ng-show="!querying && !quotes.length">No symbols have been selected yet. Click 'Add Symbol' to get started.</div>
+      <div class="alert alert-info" ng-show="querying">Getting results...</div>
+      <div class="alert alert-success" ng-show="!querying && quotes.length">
+        <div class="pull-left">
+          <span ng-show="timer && running">Updating in {{remaining}}s</span>
+          <span ng-show="timer && !running">Paused</span>
+        </div>
+        <div class="pull-right">
+          <button type="button" ng-show="timer && running" ng-click="stopTimer()" class="btn btn-xs">Stop</button>
+          <button type="button" ng-show="timer && !running" ng-click="resumeTimer()" class="btn btn-xs">Resume</button>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <table class="table" ng-show="quotes.length">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th class="text-right">Bid</th>
+            <th class="text-right">Ask</th>
+            <th class="text-right">Volume</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="quote in quotes | orderBy:'symbol'">
+            <td>{{quote.symbol}}</td>
+            <td>{{quote.Name}}</td>
+            <th class="text-right">{{quote.Bid}}</th>
+            <th class="text-right">{{quote.Ask}}</th>
+            <td class="text-right">{{quote.Volume | number}}</td>
+            <td>
+              <a ng-click="removeSymbol(quote.symbol)" title="remove">
+                <span class="glyphicon glyphicon-remove"></span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" ng-hide="adding" ng-click="adding=true" class="btn">Add Symbol</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="input-group">
+        <input type="text" ng-show="adding" ng-model="selectedSymbol"
+          typeahead="symbol for symbol in symbols | filter:$viewValue | filter:notSelected | limitTo:4"
+          typeahead-editable="false"
+          class="form-control">
+        <span class="input-group-btn">
+          <button type="button" ng-show="adding" ng-click="cancel()" class="btn btn-default">Cancel</a>
+        </span>
+      </div>
+      <br />
+      <a href="#" ng-click="showHelp=!showHelp">Help</a>
+      <br /><br />
+      <div class="well" ng-show="showHelp">
+        Click 'Add Symbol' to add of the following symbols to the selection:<br>
+        {{symbols.join(", ")}}
+        <br /><br />
+        Quotes are retrived from Yahoo Finance when the app makes a request to /quotes
+        <br /><br />
+        Click 'Stop' to stop updating, 'Resume' to resume.
+        <br /><br />
+        Remove a symbol with the link in the last column. This forces a refresh.
+        <br /><br />
+        Preferences persist to the local DB and survive page reloads.
+      </div>
+    </div>
+  </div>
+</div>
